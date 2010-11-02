@@ -6,20 +6,29 @@ require 'ruby-debug'
 require 'json'
 require 'geokit'
 
+require File.dirname(__FILE__) + '/../lib/download_helper.rb'
+
+include DownloadHelper
+
 ActiveRecord::Base.establish_connection(
   :adapter  => 'mysql',
-  :database => 'subpop-development',
+  :database => 'subpop_development',
   :username => 'root',
   :host     => 'localhost'
 )
 
+# this gets us what we need in the local DB
 class Asset < ActiveRecord::Base; end
+class Video < Asset; end
+class Audio < Asset; end
+class Image < Asset; end
 class Party < ActiveRecord::Base; end
+class Arist < Party; end
 class Release < ActiveRecord::Base; end
 class Track < ActiveRecord::Base; end
 
 # regex to parse loggiles and store apropriate data
-re = %r{
+RE = %r{
   ^(\S+)\s                # 1: log id
   (\S+)\s                 # 2: bucket-name
   \[(\S+)\s(\S+)\]\s      # 3: date time is first capture, 4: UTC offset next
@@ -34,6 +43,8 @@ re = %r{
   "([^"]+)"\s             # 10: referrer inside "
   "([^"]+)"               # 11: user-agent inside "
 }x
+
+
 
 __END__
 
