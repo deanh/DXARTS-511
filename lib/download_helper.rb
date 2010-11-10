@@ -18,7 +18,23 @@ module DownloadHelper
         "([^"]+)"\s             # 10: referrer inside "
         "([^"]+)"               # 11: user-agent inside "
       }x
-   end
+    end
+
+    def self.format_date(str)
+      month_map = {
+        "Apr" => "04", "Aug" => "08", "Dec" => "12",
+        "Feb" => "02", "Jan" => "01", "Jul" => "07",
+        "Jun" => "06", "Mar" => "03", "May" => "05",
+        "Nov" => "11", "Oct" => "10", "Sep" => "09"
+      }
+      match = str.match(/(\d{2})\/(\w{3})\/(\d{4}):([0-9:]+)/)
+      return "#{match[3]}-#{month_map[match[2]]}-#{match[1]}", match[4]
+    end
+  end
+
+  def referrer_host(ref)
+    match = ref.match(%r{(\w+://)?([^/]+)})
+    match[0]
   end
 
   def get_referrer_ip(ref)

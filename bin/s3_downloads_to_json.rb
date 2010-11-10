@@ -6,9 +6,10 @@ require 'json'
 require 'geokit'
 require 'pp'
 
-#gem 'activerecord', '= 2.3.8'
+gem 'activerecord', '= 2.3.8'
 require 'active_record'  # ?
 
+require File.dirname(__FILE__) + '/../lib/hostip.rb'
 require File.dirname(__FILE__) + '/../lib/download_helper.rb'
 
 include DownloadHelper
@@ -49,25 +50,31 @@ File.open(infile).each do |line|
      next unless asset = Asset.find_by_id(asset_match[1])
 
      next unless track = Track.find_by_title(asset.title)
-     release = track.nil? ? Release.new : track.release
+     next unless release = track.nil? ? Release.new : track.release
 
      # fallback empty loc used to generate correct JSON
      null_loc = loc_to_hash Geokit::GeoLoc.new
 
+     #puts match[10]
      if ref_ip = get_referrer_ip(match[10])
-       ref_loc = loc_to_hash MultiGeocoder.geocode(ref_ip)
+       ref_loc = Hostip.geocode(ref_ip)
      else
         ref_loc = null_loc
      end
 
-     req_loc = loc_to_hash MultiGeocoder.geocode(match[5]) || null_loc
+     date, time = S3.format_date(match[3])
+     #puts match[5]
+     req_loc = Hostip.geocode(match[5]) || null_loc
 
      out = {
-       :artist   => track.artist.name,
+       :artist   => track.artist ? track.artist.name : nil,
        :title    => asset.title,
+       :source   => "s3",
        :release  => release.title,
-       :date     => match[3],
+       :date     => date,
+       :time     => time,
        :format   => "mp3",
+       :referrer          => referrer_host(match[10]),
        :referrer_location => ref_loc,
        :request_location  => req_loc
      }

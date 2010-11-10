@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby
 require 'digest/md5'
 
-COUCH_HOST  = "http://127.0.0.1:5984"
-DB          = "dxarts"
+COUCH_HOST  = "http://dxarts511.couchone.com"
+DB          = "downloads"
 
 ARGF.each do |line|
   line.chomp!
   # (s)hell quoting
-  line.gsub!(/["]/, '\\\"')
-  line.gsub!(/[']/, '\\\\\'')
+  line.gsub!(/"/, '\\\"')
+  line.gsub!(/'/, '\\\\\'')
   uuid = Digest::MD5.hexdigest(line)
   cmd = "curl -X PUT #{COUCH_HOST}/#{DB}/#{uuid} -d \"#{line}\""
   puts cmd

@@ -36,6 +36,7 @@ Download.find_in_batches(:batch_size => 1000) do |batch|
     out = {
       :artist   => m.bandname,
       :title    => m.title,
+      :source   => "ogami",
       :release  => m.release_name,
       :date     => dl.date,
       :format   => m.format,
