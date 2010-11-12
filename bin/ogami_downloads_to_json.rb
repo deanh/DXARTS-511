@@ -4,8 +4,8 @@ require 'rubygems'
 require 'active_record'
 require 'ruby-debug'
 require 'json'
-require 'geokit'
 
+require File.dirname(__FILE__) + '/../lib/hostip.rb'
 require File.dirname(__FILE__) + '/../lib/download_helper.rb'
 
 include DownloadHelper
@@ -22,16 +22,22 @@ class Multimedia < ActiveRecord::Base
   set_table_name "multimedia"
 end
 
-Download.find_in_batches(:batch_size => 1000) do |batch|
-  batch.each do |dl|
-    m   = Multimedia.find(dl.mid)
-    null_loc = loc_to_hash Geokit::GeoLoc.new
+file_num  = 0
+batch_num = 0
+file = File.new("ogami-#{file_num}.json", "w")
 
-    if ip = get_referrer_ip(dl.referrer)
-      loc = loc_to_hash Geokit::Geocoders::MultiGeocoder.geocode(ip)
-    else
-      loc = null_loc
-    end
+Download.find_in_batches(:batch_size => 10000) do |batch|
+
+  if (batch_num % 10 == 0)
+    file_num += 1
+    file = File.new("ogami-#{file_num}.json", "w")
+    puts "File num: #{file_num}"
+  end
+
+  batch.each do |dl|
+    next if dl.mid < 100
+    m   = Multimedia.find(dl.mid)
+    ip = get_referrer_ip(dl.referrer)
 
     out = {
       :artist   => m.bandname,
@@ -39,12 +45,19 @@ Download.find_in_batches(:batch_size => 1000) do |batch|
       :source   => "ogami",
       :release  => m.release_name,
       :date     => dl.date,
+      :time     => nil,
       :format   => m.format,
-      :referrer_location => loc,
+      :referrer => {
+        :url      => dl.referrer,
+        :host     => referrer_host(dl.referrer),
+        :host_ip  => ip
+      },
       :request_location  => null_loc
     }
-    puts JSON.generate(out)
+    file.write "#{JSON.generate(out)}\n"
   end
+  puts "Finished batch: #{batch_num}"
+  batch_num += 1
 end
 
  

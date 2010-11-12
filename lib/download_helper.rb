@@ -1,4 +1,13 @@
+require 'resolv'
+
 module DownloadHelper
+  # pre-load common queries
+  @ip_table = {
+    "www.subpop.com" => "184.73.211.136",
+    "box.zhangmen.baidu.com" => "123.125.69.109",
+    "subpop-public.s3.amazonaws.com" => "72.21.203.146",
+    "www.google.com" => "74.125.227.50",
+  }
 
   module S3
     # regex to parse loggiles and store apropriate data
@@ -33,8 +42,9 @@ module DownloadHelper
   end
 
   def referrer_host(ref)
-    match = ref.match(%r{(\w+://)?([^/]+)})
-    match[0]
+    if match = ref.match(%r{(\w+://)?([^/]+)})
+      match[0]
+    end
   end
 
   def get_referrer_ip(ref)
@@ -45,8 +55,12 @@ module DownloadHelper
       ref = md[1]
     end
 
+    # return cached value
+    if defined? @ip_table[ref]
+      return @ip_table[ref]
+    end
+
     # IP lookup. q & d
-    
     return case
            when ref == nil                   : nil
            when ref == ''                    : nil
@@ -55,9 +69,12 @@ module DownloadHelper
            when ref =~ /^\d+\.\d+\.\d+\.\d+$/: ref
            else
              begin
-               `host #{ref}`.match(/\d+\.\d+\.\d+\.\d+/)[0]
+               #ip = `host #{ref}`.match(/\d+\.\d+\.\d+\.\d+/m)[0]
+               ip = Resolv.getaddress ref
+               @ip_table[ref] = ip
              rescue
              end 
+             ip
            end
   end
   
@@ -69,6 +86,17 @@ module DownloadHelper
       :state        => loc.state,
       :city         => loc.city,
       :zip          => loc.zip
+    }
+  end
+
+  def null_loc
+    loc_hash = { 
+      :lat => nil,
+      :lng => nil,
+      :country_code => nil,
+      :state        => nil,
+      :city         => nil,
+      :zip          => nil
     }
   end
 end

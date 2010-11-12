@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'digest/md5'
 
-COUCH_HOST  = "http://dxarts511.couchone.com"
+COUCH_HOST  = "http://localhost:5984"
 DB          = "downloads"
 
 ARGF.each do |line|

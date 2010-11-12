@@ -43,41 +43,35 @@ unless infile = ARGV[0] and File.exists? infile
 end
 
 File.open(infile).each do |line|
-   if match = line.match(S3.RE) 
-     # see DownloadHelper::S3 for match format
-     # pull asset and id from mp3 filename, bail otherwise
-     next unless asset_match = match[7].match(/(\d+)\.mp3$/i)
-     next unless asset = Asset.find_by_id(asset_match[1])
+  if match = line.match(S3.RE) 
+    # see DownloadHelper::S3 for match format
+    # pull asset and id from mp3 filename, bail otherwise
+    next unless asset_match = match[7].match(/(\d+)\.mp3$/i)
+    next unless asset = Asset.find_by_id(asset_match[1])
 
-     next unless track = Track.find_by_title(asset.title)
-     next unless release = track.nil? ? Release.new : track.release
+    next unless track = Track.find_by_title(asset.title)
+    next unless release = track.nil? ? Release.new : track.release
 
-     # fallback empty loc used to generate correct JSON
-     null_loc = loc_to_hash Geokit::GeoLoc.new
+    ref_ip = get_referrer_ip(match[10])
 
-     #puts match[10]
-     if ref_ip = get_referrer_ip(match[10])
-       ref_loc = Hostip.geocode(ref_ip)
-     else
-        ref_loc = null_loc
-     end
+    date, time = S3.format_date(match[3])
+    req_loc = Hostip.geocode(match[5]) || null_loc
 
-     date, time = S3.format_date(match[3])
-     #puts match[5]
-     req_loc = Hostip.geocode(match[5]) || null_loc
-
-     out = {
-       :artist   => track.artist ? track.artist.name : nil,
-       :title    => asset.title,
-       :source   => "s3",
-       :release  => release.title,
-       :date     => date,
-       :time     => time,
-       :format   => "mp3",
-       :referrer          => referrer_host(match[10]),
-       :referrer_location => ref_loc,
-       :request_location  => req_loc
-     }
-     puts JSON.generate(out)
-   end
+    out = {
+      :artist   => track.artist ? track.artist.name : nil,
+      :title    => asset.title,
+      :source   => "s3",
+      :release  => release.title,
+      :date     => date,
+      :time     => time,
+      :format   => "mp3",
+      :referrer => {
+        :url      => match[10],
+        :host     => referrer_host(match[10]),
+        :host_ip  => ref_ip,
+      },
+      :request_location  => req_loc
+    }
+    puts JSON.generate(out)
+  end
 end
