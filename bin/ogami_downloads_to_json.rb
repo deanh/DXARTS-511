@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'active_record'
 require 'json'
+
+gem 'activerecord', '= 2.3.8'
+require 'active_record'  # ?
 
 require File.dirname(__FILE__) + '/../lib/hostip.rb'
 require File.dirname(__FILE__) + '/../lib/download_helper.rb'
@@ -29,6 +31,7 @@ Download.find_in_batches(:batch_size => 10000) do |batch|
 
   if (batch_num % 10 == 0)
     file_num += 1
+    next if file_num < 58
     file = File.new("ogami-#{file_num}.json", "w")
     puts "File num: #{file_num}"
   end

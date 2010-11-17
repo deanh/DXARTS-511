@@ -71,7 +71,7 @@ module DownloadHelper
            else
              begin
                #ip = `host #{ref}`.match(/\d+\.\d+\.\d+\.\d+/m)[0]
-               puts "|#{ref}|"
+               #puts "|#{ref}|"
                ip = Resolv.getaddress ref
                @ip_table[ref] = ip
              rescue
