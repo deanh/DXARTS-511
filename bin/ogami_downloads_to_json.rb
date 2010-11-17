@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'active_record'
-require 'ruby-debug'
 require 'json'
 
 require File.dirname(__FILE__) + '/../lib/hostip.rb'
@@ -35,8 +34,8 @@ Download.find_in_batches(:batch_size => 10000) do |batch|
   end
 
   batch.each do |dl|
-    next if dl.mid < 100
-    m   = Multimedia.find(dl.mid)
+    m   = Multimedia.find_by_id(dl.mid)
+    next unless m
     ip = get_referrer_ip(dl.referrer)
 
     out = {
@@ -56,6 +55,7 @@ Download.find_in_batches(:batch_size => 10000) do |batch|
     }
     file.write "#{JSON.generate(out)}\n"
   end
+
   puts "Finished batch: #{batch_num}"
   batch_num += 1
 end

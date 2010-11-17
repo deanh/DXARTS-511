@@ -49,7 +49,8 @@ module DownloadHelper
 
   def get_referrer_ip(ref)
     return if ref == nil
-    
+    ref.chomp!
+
     # strip protocol and query string
     if md = ref.match(/http:\/\/([^\/?]*).*/)
       ref = md[1]
@@ -66,10 +67,11 @@ module DownloadHelper
            when ref == ''                    : nil
            when ref =~ /^\s+$/               : nil
            when ref =~ /^\s*-\s*$/           : nil
-           when ref =~ /^\d+\.\d+\.\d+\.\d+$/: ref
+           when ref =~ /^\d+\.\d+\.\d+\.\d+/ : ref
            else
              begin
                #ip = `host #{ref}`.match(/\d+\.\d+\.\d+\.\d+/m)[0]
+               puts "|#{ref}|"
                ip = Resolv.getaddress ref
                @ip_table[ref] = ip
              rescue
