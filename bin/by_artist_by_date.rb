@@ -33,7 +33,7 @@ ARGF.each do |l|
   if hsh["#{ar[1]},#{ar[2]}"]
     hsh["#{ar[1]},#{ar[2]}"] += 1
   else
-    hsh["#{ar[1]},#{ar[2]}"] = 0
+    hsh["#{ar[1]},#{ar[2]}"] = 1
   end
 end
 
