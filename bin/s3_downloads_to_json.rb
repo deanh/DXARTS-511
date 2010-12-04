@@ -27,20 +27,6 @@ class Asset < ActiveRecord::Base; end
 class Video < Asset; end
 class Audio < Asset; end
 class Image < Asset; end
-class Party < ActiveRecord::Base; end
-class Artist < Party; end
-class Release < ActiveRecord::Base
-  has_many :tracks
-end
-class Track < ActiveRecord::Base
-  belongs_to :release
-  belongs_to :artist
-end
-
-unless infile = ARGV[0] and File.exists? infile
-  warn "usage: #{$0} <input file>"
-  exit 1
-end
 
 File.open(infile).each do |line|
   if match = line.match(S3.RE) 

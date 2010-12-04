@@ -31,7 +31,10 @@ Download.find_in_batches(:batch_size => 10000) do |batch|
 
   if (batch_num % 10 == 0)
     file_num += 1
-    next if file_num < 58
+    if file_num < 58
+      batch_num += 1
+      next
+    end
     file = File.new("ogami-#{file_num}.json", "w")
     puts "File num: #{file_num}"
   end

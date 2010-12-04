@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cut -d, -f5,6,9 *.json > ../title_artist_by_date
+
+grep -v \| title_artist_by_date | grep -v -i "host" | grep -v format | awk -F, '{print $3","$2","$1}' | sort > date_artist_title
