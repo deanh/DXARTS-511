@@ -3,37 +3,60 @@
 <head>
   <meta charset="utf-8" />
   <title>DXARTS 511</title>
+  <style>
+    body {background-color: #444;}
+    canvas {
+      margin-top: 150px;
+      position: absolute;
+      left: 50%;
+      margin-left: -750px;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="thing"></div>
+
   <script src="http://code.jquery.com/jquery-1.4.4.js"></script>
   <script src="js/downloads.js"></script>
   <script src="js/dlib.js"></script>
 
   <script>
-    var animSpeed = 200;
-var canvas = dLib.setup(1500,800);
+    var animSpeed = 100;
+    var canvas = dLib.setup(1500,800);
     var titleDict = {};
     var base = {
-        'us': {x: 200, y: 200, font: "Lucida Grande"},
-        'uk': {x: 400, y: 300, font: "Lucida Grande"},
-        'canada': {x: 600, y: 400, font: "Lucida Grande"},
-        'japan': {x: 800, y: 500, font: "Lucida Grande"},
-        'china': {x: 1000, y: 600, font: "Lucida Grande"}
+        'us': {x: 200, y: 200, font: "sans-serif"},
+        'uk': {x: 400, y: 300, font: "sans-serif"},
+        'canada': {x: 600, y: 400, font: "sans-serif"},
+        'japan': {x: 800, y: 500, font: "sans-serif"},
+        'china': {x: 1000, y: 600, font: "sans-serif"}
     }; 
-    var ar = [];
-    var label = dLib.newText("", 100, 750, 
-                             '90px', "rgb(0,0,0)", 
+
+    var arAhead  = [];
+    var arBehind = [];
+    var dateLabel = dLib.newText("", 900, 150, 
+                             '90px', "rgb(200,200,200)", 
                              "sans-serif");
+    var timeout;
 
     for (var t in DownloadData.territories) {
-        base[t]['fill'] = dLib.randFill();
+        base[t]['fill']       = dLib.randFill();
+        base[t]['sumLabel']   = dLib.newText("", base[t].x / 2 - 20, 760,
+                                             '40px', base[t]['fill'], 
+                                             "sans-serif");
+        base[t]['indexLabel'] = dLib.newText(t, base[t].x / 2, 785, 
+                                             '20px', base[t]['fill'], 
+                                             "sans-serif");
     }
-  
-    //$().bind('dataLoaded', function () {
+
+    //$(document).live('dataLoaded', function () {alert("ready!")});
     function render(date) {
-        label.text = date;
+        var dailySum = {};
+        dateLabel.text = date;
+        for(var j in titleDict) {titleDict[j].text = "";};
         for(var ter in DownloadData.territories) {
+            dailySum[ter] = 0;
             $.each(DownloadData.countByTitle(ter, date), function(k,v) {
                 var key = ter + ":" + k;
                 // titleDict keeps a record of which titles have been 
@@ -47,25 +70,76 @@ var canvas = dLib.setup(1500,800);
                                                   base[ter].font);
                 }
                 
-                titleDict[key].size =  Math.sqrt(4 * v) + "px";
+                if (v > 0) {
+                    titleDict[key].size = Math.sqrt(4 * v) + "px";
+                    titleDict[key].text = k;
+                }
+                dailySum[ter] =  dailySum[ter] + v;
             });
+            base[ter].sumLabel.text = dailySum[ter];
+            base[ter].sumLabel.size =  (dailySum[ter] / 8) + 20 + "px";
         }
         dLib.draw();
     };
 
-    function doFrame () {
-        var date = ar.shift();
+    function forwardFrame () {
+        var date = arAhead.shift();
         if (date !== undefined) {
+            arBehind.push(date);
             render(date);
-            setTimeout (function () {doFrame()}, animSpeed);
+            timeout = setTimeout (function () {forwardFrame()}, animSpeed);
+        } else {
+            startForward();
         }
     }
 
-    function start() {
-        for (i in DownloadData.dateDict['us']) {ar.push(i)}
-        setTimeout (function () {doFrame()}, animSpeed);
+    function backwardFrame () {
+        var date = arBehind.pop();
+        if (date !== undefined) {
+            arAhead.unshift(date);
+            render(date);
+            timeout = setTimeout (function () {backwardFrame()}, animSpeed);
+        } else {
+            startBackward();
+        }
     }
 
+    function startForward() {
+        for (i in DownloadData.dateDict['us']) {arAhead.push(i)}
+        timeout = setTimeout (function () {forwardFrame()}, animSpeed);
+    }
+
+    function startBackward() {
+        for (i in DownloadData.dateDict['us']) {arBehind.push(i)}
+        timeout = setTimeout (function () {backwardFrame()}, animSpeed);
+    }
+
+    function stop() {
+        clearTimeout(timeout);
+    }
+
+    $(document).bind('keydown', function(event){
+        // alert(event.keyCode);
+        switch(event.keyCode) {
+        case 32: // space bar 
+            stop();
+            break;
+        case 39: // forward arrow
+            stop();
+            forwardFrame();
+            break;
+        case 37: // back arrow
+            stop();
+            backwardFrame();
+            break;
+        case 70: // F = faster
+            animSpeed = animSpeed / 1.1;
+            break;
+        case 83: // S = slower
+            animSpeed = animSpeed * 1.1;
+            break;
+        }
+     });
   </script>
 </body>
 

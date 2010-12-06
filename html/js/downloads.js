@@ -54,7 +54,8 @@ var DownloadData = (function () {
         
         // all territories loaded, fire event
         if (numLoaded >= numTerritories) {
-            $().trigger('dataLoaded');
+            //alert("ready!");
+            //$(document).trigger('dataLoaded');
         }
     }
 
