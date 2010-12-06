@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DXARTS 511</title>
+</head>
+
+<body>
+  <script src="http://code.jquery.com/jquery-1.4.4.js"></script>
+  <script src="js/downloads.js"></script>
+  <script src="js/dlib.js"></script>
+
+  <script>
+    var animSpeed = 200;
+var canvas = dLib.setup(1500,800);
+    var titleDict = {};
+    var base = {
+        'us': {x: 200, y: 200, font: "Lucida Grande"},
+        'uk': {x: 400, y: 300, font: "Lucida Grande"},
+        'canada': {x: 600, y: 400, font: "Lucida Grande"},
+        'japan': {x: 800, y: 500, font: "Lucida Grande"},
+        'china': {x: 1000, y: 600, font: "Lucida Grande"}
+    }; 
+    var ar = [];
+    var label = dLib.newText("", 100, 750, 
+                             '90px', "rgb(0,0,0)", 
+                             "sans-serif");
+
+    for (var t in DownloadData.territories) {
+        base[t]['fill'] = dLib.randFill();
+    }
+  
+    //$().bind('dataLoaded', function () {
+    function render(date) {
+        label.text = date;
+        for(var ter in DownloadData.territories) {
+            $.each(DownloadData.countByTitle(ter, date), function(k,v) {
+                var key = ter + ":" + k;
+                // titleDict keeps a record of which titles have been 
+                // created as dLib shapes. It's keyed on territory + title
+                // since we want separate shapes for different territories
+                if (titleDict[key] === undefined) {
+                    var pnt = dLib.randPointNear({x: base[ter].x, 
+                                                      y: base[ter].y}, 170);
+                    titleDict[key] = dLib.newText(k, pnt.x, pnt.y, 
+                                                  '0px', base[ter].fill, 
+                                                  base[ter].font);
+                }
+                
+                titleDict[key].size =  Math.sqrt(4 * v) + "px";
+            });
+        }
+        dLib.draw();
+    };
+
+    function doFrame () {
+        var date = ar.shift();
+        if (date !== undefined) {
+            render(date);
+            setTimeout (function () {doFrame()}, animSpeed);
+        }
+    }
+
+    function start() {
+        for (i in DownloadData.dateDict['us']) {ar.push(i)}
+        setTimeout (function () {doFrame()}, animSpeed);
+    }
+
+  </script>
+</body>
+
+</html>

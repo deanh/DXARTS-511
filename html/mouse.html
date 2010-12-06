@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title></title></head>
+<body>
+  <script type="text/javascript" src="dlib.js"></script>
+  <script>
+    var canvas      = dLib.setup();
+    var num_circles = 100;
+
+    var i; var circles = [];
+
+    for (i = 0; i < num_circles; i++) {
+        circles[i] = dLib.randCircle(30);
+        // the following vars are defined for use in the update function
+        // below
+        circles[i]['theta']  = dLib.randInt(360);
+        circles[i]['speedY'] = dLib.randInt(10) + 5;
+        circles[i]['speedX'] = dLib.randInt(10) + 5;
+        circles[i]['baseR']  = dLib.randInt(300) + 100;
+        circles[i]['r']      = circles[i].baseR;
+        circles[i]['dir']    = "in";
+        circles[i]['xScale'] = Math.random() * 0.8 + 0.8;
+        circles[i]['yScale'] = Math.random() * 0.4 + 0.8;
+
+        circles[i].update = function () {
+            ++(this.theta);
+            if (this.r > dLib.randInt(10) + 5 && this.dir === "in") {
+                this.r = this.r - 2;
+            } else if (this.r <= (this.baseR + 11) && this.dir === "out") {
+                this.r = this.r + 10;
+            } else {
+                this.dir = "in";
+            }
+            this.x = this.xScale * document.mouseX + 
+                  Math.floor(Math.cos(this.theta/this.speedX) * this.r);
+            this.y = this.yScale * document.mouseY  + 
+                  Math.floor(Math.sin(this.theta/this.speedY) * this.r);
+            //console.log(this.r);
+        }
+    }
+
+    document.onmousemove = function (e) {
+        // update mouseX and mouse Y in document
+        dLib.trackMouse(document)(e);
+        for (i = 0; i < num_circles; i++) {
+            circles[i]['dir'] = "out";
+        }
+    };
+
+    setInterval(function () {dLib.draw();}, 25)
+  </script>
+</body>
+</html>
