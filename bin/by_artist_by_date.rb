@@ -4,7 +4,7 @@ $-w = true
 require 'dbm'
 require 'pp'
 
-@dbm = DBM.new("date_artist_title.db")
+@dbm = DBM.new("date_artist_title")
 current_date = nil
 hsh          = {}
 
