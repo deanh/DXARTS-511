@@ -42,10 +42,10 @@
 
     for (var t in DownloadData.territories) {
         base[t]['fill']       = dLib.randFill();
-        base[t]['sumLabel']   = dLib.newText("", base[t].x / 2 - 20, 760,
+        base[t]['sumLabel']   = dLib.newText("", base[t].x / 2 - 5, 740,
                                              '40px', base[t]['fill'], 
                                              "sans-serif");
-        base[t]['indexLabel'] = dLib.newText(t, base[t].x / 2, 785, 
+        base[t]['indexLabel'] = dLib.newText(t, base[t].x / 2, 765, 
                                              '20px', base[t]['fill'], 
                                              "sans-serif");
     }
@@ -77,7 +77,7 @@
                 dailySum[ter] =  dailySum[ter] + v;
             });
             base[ter].sumLabel.text = dailySum[ter];
-            base[ter].sumLabel.size =  (dailySum[ter] / 8) + 20 + "px";
+            base[ter].sumLabel.size =  Math.sqrt(dailySum[ter]) + 20 + "px";
         }
         dLib.draw();
     };
