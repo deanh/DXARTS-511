@@ -6,7 +6,7 @@
   <style>
     body {background-color: #444;}
     canvas {
-      margin-top: 150px;
+      margin-top: 20px;
       position: absolute;
       left: 50%;
       margin-left: -750px;
@@ -22,7 +22,7 @@
   <script src="js/dlib.js"></script>
 
   <script>
-    var animSpeed = 100;
+    var animSpeed = 200;
     var canvas = dLib.setup(1500,800);
     var titleDict = {};
     var base = {
@@ -86,6 +86,7 @@
         var date = arAhead.shift();
         if (date !== undefined) {
             arBehind.push(date);
+            //dLib.rotate(0.1);
             render(date);
             timeout = setTimeout (function () {forwardFrame()}, animSpeed);
         } else {

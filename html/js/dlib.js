@@ -202,7 +202,7 @@ var dLib = (function () {
             context.translate(85, 0);  
             context.rotate(angle * Math.PI / 180);    
             context.rotate(angle);
-            context.save();
+            //context.save();
             return this;
         },
 
