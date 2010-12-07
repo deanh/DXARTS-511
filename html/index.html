@@ -30,7 +30,7 @@
 
 <body>
   <div id="overlay">
-    <p>Hello, friend. Here's how to play:<p>
+    <p>Hello, friend. How to play:<p>
     <ul>
       <li><strong>H</strong> to show or hide this <strong>H</strong>ELP.</li>
       <li><strong>RIGHT ARROW</strong> to start the animation normally.</li>
@@ -75,11 +75,15 @@
                                              "sans-serif");
     }
 
-    //$(document).live('dataLoaded', function () {alert("ready!")});
+    // this is fairly  ugly. many engineers were killed to produce this
+    // hack.
     function render(date) {
-        var dailySum = {};
+        var dailySum = {};  // 
         dateLabel.text = date;
+
+        // we need a clean slate. more efficient approaches, plz apply
         for(var j in titleDict) {titleDict[j].text = "";};
+
         for(var ter in DownloadData.territories) {
             dailySum[ter] = 0;
             $.each(DownloadData.countByTitle(ter, date), function(k,v) {
