@@ -6,10 +6,11 @@
   <style>
     body {background-color: #444;}
     canvas {
-      margin-top: 20px;
       position: absolute;
       left: 50%;
       margin-left: -750px;
+      top: 50%;
+      margin-top: -400px;
     }
   </style>
 </head>
@@ -59,12 +60,13 @@
             dailySum[ter] = 0;
             $.each(DownloadData.countByTitle(ter, date), function(k,v) {
                 var key = ter + ":" + k;
+                var spice =  (dLib.randInt(50) % 3) + 1;
                 // titleDict keeps a record of which titles have been 
                 // created as dLib shapes. It's keyed on territory + title
                 // since we want separate shapes for different territories
                 if (titleDict[key] === undefined) {
                     var pnt = dLib.randPointNear({x: base[ter].x, 
-                                                      y: base[ter].y}, 170);
+                                                      y: base[ter].y}, 300 / spice);
                     titleDict[key] = dLib.newText(k, pnt.x, pnt.y, 
                                                   '0px', base[ter].fill, 
                                                   base[ter].font);

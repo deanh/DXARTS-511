@@ -29,8 +29,8 @@ var DownloadData = (function () {
         "us":"US",
         "uk":"UK",
         "china":"CN",
+        "canada":"CA",
         "japan":"JP",
-        "canada":"CA"
     };
 
     var numTerritories = 5;
