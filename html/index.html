@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>DXARTS 511</title>
   <style>
-    body {background-color: #444;}
+    body {background-color: #222; font-family: sans-serif;}
     canvas {
       position: absolute;
       left: 50%;
@@ -12,11 +12,35 @@
       top: 50%;
       margin-top: -400px;
     }
+    #overlay {
+      position: absolute;
+      left: 50%;
+      margin-left: -250px;
+      z-index: 100;
+      top: 100px;
+      left: 500px;
+      width: 500px;
+      background-color: rgba(255,255,255,0.7);
+      color: #000;
+      padding: 30px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 
 <body>
-  <div id="thing"></div>
+  <div id="overlay">
+    <p>Hello, friend. Here's how to play:<p>
+    <ul>
+      <li><strong>H</strong> to show or hide this <strong>H</strong>ELP.</li>
+      <li><strong>RIGHT ARROW</strong> to start the animation normally.</li>
+      <li><strong>LEFT ARROW</strong> to start the animation in reverse.</li>
+      <li><strong>S</strong> to <strong>S</strong>LOW DOWN the animation.</li>
+      <li><strong>F</strong> to make it <strong>F</strong>ASTER.</li>
+      <li><strong>SPACE</strong> pauses.</li>
+    </ul>
+    <p><strong>DESCRIPTION:</strong> What follows is an animation of subpop.com MP3 downloads by date. Download titles are reprsented by text on the screen. Larger text means more downloads of a title on that date. The text is color coded to match a color which represents the territory where the media was downloaded. Look to the bottom right for daily totals.</p>
+  </div>
 
   <script src="http://code.jquery.com/jquery-1.4.4.js"></script>
   <script src="js/downloads.js"></script>
@@ -30,8 +54,8 @@
         'us': {x: 200, y: 200, font: "sans-serif"},
         'uk': {x: 400, y: 300, font: "sans-serif"},
         'canada': {x: 600, y: 400, font: "sans-serif"},
-        'japan': {x: 800, y: 500, font: "sans-serif"},
-        'china': {x: 1000, y: 600, font: "sans-serif"}
+        'china': {x: 800, y: 500, font: "sans-serif"},
+        'japan': {x: 1000, y: 600, font: "sans-serif"}
     }; 
 
     var arAhead  = [];
@@ -122,16 +146,19 @@
     }
 
     $(document).bind('keydown', function(event){
-        // alert(event.keyCode);
+        //alert(event.keyCode);
         switch(event.keyCode) {
         case 32: // space bar 
+            //$('#overlay').show();
             stop();
             break;
         case 39: // forward arrow
+            //$('#overlay').hide();
             stop();
             forwardFrame();
             break;
         case 37: // back arrow
+            //$('#overlay').hide();
             stop();
             backwardFrame();
             break;
@@ -140,6 +167,10 @@
             break;
         case 83: // S = slower
             animSpeed = animSpeed * 1.1;
+            break;
+        case 72: // H = help
+            //stop();
+            $('#overlay').toggle();
             break;
         }
      });

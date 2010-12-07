@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+  <div id="main">
+    <h1>Visualization of Digital Asset Consumption Data with HTML5 and Other Web Technologies</h1>
+    <h2>DXARTS 511: Fall 2010, Dean Hudson</h2>
+    <h3>Data Formats</h3>
+    <h4>Individual Download Record Format</h4>
+    <p>Download data was pulled from the disparate sources and normalized in the following JSON format:</p>
+    <pre>
+    {
+      "referrer": {
+        "url":"-",
+        "host_ip":null,"host":"-"
+      },
+      "release":"Happy Birthday",
+      "title":"Girls FM",
+      "artist":"Happy Birthday",
+      "format":"mp3",
+      "source":"s3",
+      "date":"2010-01-13",
+      "request_location": {
+        "city":null,
+        "country_code":"US",
+        "state":null,
+        "lat":null,
+        "lng":null
+      },
+      "time":"23:01:53"
+    }
+    </pre>
+    <h4>Summary Data Format</h4>
+    <p>For the purposes of the specific visual approach used in this project, individual download records were reduced into summary JSON files which summarized per track downloads by date:</p>
+    <pre>
+    [
+      {
+        "2009-06-19":
+        {
+          "Chad VanGaalen | City of Electric Light": 3,
+          "Fleet Foxes | Mykonos": 4,
+          "Fruit Bats | My Unusual Friend": 7,
+          "Grand Archives | Silver Among the Gold": 12,
+          "Handsome Furs | Radio Kaliningrad": 5,
+          "Pissed Jeans | False Jesii Part 2": 6,
+          "Tiny Vipers | Dreamer": 5,
+          "Vetiver | Strictly Rule": 5
+        }
+      },
+      {
+        "2009-06-20":
+        {
+          "A Frames | Experiment": 5,
+          "A Frames | Galena": 3,
+          "Arlo | Culture": 3,
+          "Arlo | Runaround": 2,
+          "Band of Horses | No One's Gonna Love You": 23,
+          "Band of Horses | The Funeral": 19,
+          "Band of Horses | The Great Salt Lake": 9,
+          "Beachwood Sparks | Confusion Is Nothing New": 2,
+          "Beachwood Sparks | Drinkswater": 2,"Blitzen Trapper | Furr": 6
+        }
+      }
+    ]
+    </pre>
+    <p>These files where split into individual JSON files based on the country code od the referring IP address. The above, for example, was exceerpted from date_artist_title.US.json, the summary file for US downloads.</p>
+  </div>
+</body>
+</html>

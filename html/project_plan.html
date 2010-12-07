@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+  <body>
+    <div id="main">
+      <h1>Visualization of Digital Asset Consumption Data in HTML5 and Other Web Technologies</h1>
+      <h2>DXARTS 511: Fall 2010, Dean Hudson</h2>
+      <h3>Project Plan</h3>
+      <h4>Description</h4>
+      <p>The primary purpose of this project is to explore the viability of HTML5 and other web-based tools as a platform for build data visualizations which operate on large datasets. Specifically, I hope to normalize a dataset representing digital asset consumption patterns of users of subpop.com from 2003 (the earliest period for which we have data available) to present, and and provide a web based tool to explore the data visually.</p>
+
+      <h4>Dataset</h4>
+      <p>Due to web server reconfigurations over the time period in question, the log data exists several different formats: 2003-2007 data exists in a table called "downloads" in the main subpop.com MySQL database consisting of millions of row; Nginx and Apache log files exist in various formats on subpop.com web servers from 2007-2010 and on the newer, cloud-based server; AWS S3 logs exist for most of the downloads hosted in S3 since 2008; and web usage data which has been stored in Google Analytics since mid-2006. Each of these disparate sources share the following common information: asset identifiers (database IDs or track titles which can be linked to track metadata), IP addresses, and timestamps.</p>
+      <h4>Task List</h4>
+      <ol>
+        <li>Move log data from multiple sources to external hard drive
+          <ul>
+	    <li><del>Pull 2003-2007 data from SQL file on S3 and import to local MySQL server</del></li>
+	    <li><del>Collect Apache/Nginx logs from S3 and current servers</del></li>
+	    <li><del>Retrieve S3 data</del></li>
+          </ul>
+        </li>
+        <li>Normalize and import data into single data store
+          <ul>
+	    <li><del>Set up normalized database schema</del></li>
+	    <li><del>Build data importer for MySQL data</del></li>
+	    <li><del>Build data importer for Apache/Nginx logs</del></li>
+	    <li><del>Build data importer for S3 logs</del></li>
+	    <li><del>Import dataset</del></li>
+          </ul>
+        </li>
+        <li>Expose data via web API
+          <ul>
+	    <li>Wrap data in ActiveRecord objects</li>
+	    <li>Build Sinatra app to handle controller layer, and return JSON over HTTP</li>
+	    <li>Set up hosting for Sinatra app on Heroku</li>
+            OR
+	    <li><del>Set up public CouchDB host with datastore</del></li>
+          </ul>
+        </li>
+        <li>Design visualization
+          <ul>
+	    <li><del>Identify information vectors</del></li>
+	    <li><del>Identify possible narratives</del></li>
+	    <li><del>Explore appropriate representations</del></li>
+          </ul>
+        </li>
+        <li>Create interface
+          <ul>
+	    <li><del>Write HTML5 template (using Canvas and SVG tags)</del></li>
+	    <li><del>Write JavaScript code to poll data from server via AJAX calls</del></li>
+	    <li><del>Implement visualization in JavaSscript using direct calls to Canvas API or via a library</del></li>
+          </ul>
+        </li>
+      </ol>
+      <strong>Tools / Reseources</strong>
+      <ol>
+        <li>
+          <ul>Hosting&nbsp;
+	    <li>Heroku: Rails Hosting</li>
+	    <li>Couchone.com: CouchDB hosting</li>
+	    <li>Github.com: Source code repository</li>
+          </ul>
+        </li>
+        <li>
+          <ul>Software&nbsp;
+	    <li>Protovis: JS data visulization software</li>
+	    <li>Ruby/Perl</li>
+	    <li>MySQL (old database</li>
+	    <li>Postgres</li>
+	    <li>git: version control</li>
+	    <li>JQuery</li>
+	    <li>ExplorerCanvas</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </body>
+</html>
