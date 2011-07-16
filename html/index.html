@@ -4,22 +4,26 @@
   <meta charset="utf-8" />
   <title>DXARTS 511</title>
   <style>
-    body {background-color: #222; font-family: sans-serif;}
+    body {background-color: #222; font-family: sans-serif; overflow: hidden;}
     canvas {
       position: absolute;
-      left: 50%;
-      margin-left: -750px;
-      top: 50%;
-      margin-top: -400px;
+      margin: 0;
+      padding: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
     }
     #overlay {
       position: absolute;
-      left: 50%;
-      margin-left: -250px;
+      margin: auto;
       z-index: 100;
-      top: 100px;
-      left: 500px;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       width: 500px;
+      height: 300px;
       background-color: rgba(255,255,255,0.7);
       color: #000;
       padding: 30px;
@@ -48,7 +52,7 @@
 
   <script>
     var animSpeed = 200;
-    var canvas = dLib.setup(1500,800);
+    var canvas = dLib.setup(1200,800);
     var titleDict = {};
     var base = {
         'us': {x: 200, y: 200, font: "sans-serif"},
